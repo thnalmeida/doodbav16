@@ -1,0 +1,39 @@
+name: Construir e Publicar Imagem Odoo no GHCR
+on:
+  push:
+    branches:
+      - "main"
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Login no GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extrair metadados (tags) para a Imagem
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+
+      - name: Construir e Enviar a Imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: ./odoo
+          file: ./odoo/Dockerfile
+          push: true
+          build-args: |
+            ODOO_VERSION=16.0
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
