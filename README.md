@@ -6,6 +6,13 @@
 
 # odoo - a Doodba deployment
 
+Para conseguir usar a aplicação localmente: 
+1) No repositório raiz do projeto: `docker compose up`
+2) Em seguida: `docker exec doodba-v16-odoo-1 odoo -d devel --init=base --stop-after-init --without-demo=all`
+3) Posteriormente: invoke git-aggregate
+4) E, então: ` docker compose restart`
+
+Depois, verifique a porta exposta pelo "proxy" para acessar a aplicação localmente. 
 This project is a Doodba scaffolding. Check upstream docs on the matter:
 
 - [General Doodba docs](https://github.com/Tecnativa/doodba).
